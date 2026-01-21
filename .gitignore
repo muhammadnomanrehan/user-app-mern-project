@@ -1,0 +1,22 @@
+# Backend env
+user-backend/.env
+
+# Frontend env
+# user-frontend/.env
+
+# Node modules
+user-backend/node_modules/
+user-frontend/node_modules/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+
+
+
+
+
+
+
