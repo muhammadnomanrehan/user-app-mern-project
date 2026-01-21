@@ -194,26 +194,28 @@ const Register = () => {
                   </Field>
 
                   {/* Strength bar */}
-                  <div className="mt-1">
-                    <div className="h-1.5 bg-gray-200 rounded">
-                      <div
-                        className="h-1.5 rounded transition-all"
-                        style={{
-                          width: `${score}%`,
-                          background: score >= 80 ? "#16a34a" : score >= 60 ? "#f59e0b" : "#ef4444",
-                        }}
-                      />
-                    </div>
+                
+{/* Strength bar -- SHOW ONLY WHEN USER TYPED SOMETHING */}
+{pwd.length > 0 && (
+  <div className="mt-1" aria-live="polite">
+    <div className="h-1.5 bg-gray-200 rounded">
+      <div
+        className="h-1.5 rounded transition-all"
+        style={{
+          width: `${score}%`,
+          background: score >= 80 ? "#16a34a" : score >= 60 ? "#f59e0b" : "#ef4444",
+        }}
+      />
+    </div>
+    <small
+      className="text-[10px] font-medium"
+      style={{ color: score >= 80 ? "#16a34a" : score >= 60 ? "#f59e0b" : "#ef4444" }}
+    >
+      {label}
+    </small>
+  </div>
+)}
 
-                    <small
-                      className="text-[10px] font-medium"
-                      style={{
-                        color: score >= 80 ? "#16a34a" : score >= 60 ? "#f59e0b" : "#ef4444",
-                      }}
-                    >
-                      {label}
-                    </small>
-                  </div>
 
                   <ErrorMessage name="password" className="mt-1 text-sm text-red-600" component="div" />
                 </div>
