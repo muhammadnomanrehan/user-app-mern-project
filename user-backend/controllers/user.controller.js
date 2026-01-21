@@ -355,6 +355,47 @@ export const logout = asyncHandler(async (_req, res) => {
  * Body: { email }
  * Always respond generic to prevent email enumeration.
  */
+// export const forgetPassword = asyncHandler(async (req, res) => {
+//   const { email } = req.body || {};
+//   if (!email) throw new HttpError(400, "Email is required");
+
+//   const normalizedEmail = String(email).toLowerCase().trim();
+//   const user = await User.findOne({ email: normalizedEmail });
+
+//   // Always return generic success (even if user doesn't exist)
+//   // But if user exists, create and email OTP
+  
+// if (user) {
+//   const otp = generateOTP();              // e.g., 6-digit string
+//   const otpHash = await bcrypt.hash(otp, 10);
+
+//   user.resetOTP = otpHash;
+//   user.resetOTPExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+//   await user.save();
+
+//   // ✅ send real email via Nodemailer (Mailtrap in dev)
+
+// await sendOTPEmail({ to: normalizedEmail, otp, minutes: 10 });
+
+
+//   // (dev-only) optionally log to console:
+//   if (process.env.NODE_ENV !== "production") {
+//     console.log(`[DEV] OTP for ${normalizedEmail}: ${otp}`);
+//   }
+// }
+
+
+//   // return res.json({ message: "If this email exists, an OTP has been sent." });
+  
+// if (!user) {
+//   throw new HttpError(404, "This email is not registered");
+// }
+
+// return res.json({ message: "OTP has been sent to your email." });
+
+// });
+
+
 export const forgetPassword = asyncHandler(async (req, res) => {
   const { email } = req.body || {};
   if (!email) throw new HttpError(400, "Email is required");
@@ -362,38 +403,37 @@ export const forgetPassword = asyncHandler(async (req, res) => {
   const normalizedEmail = String(email).toLowerCase().trim();
   const user = await User.findOne({ email: normalizedEmail });
 
-  // Always return generic success (even if user doesn't exist)
-  // But if user exists, create and email OTP
-  
-if (user) {
-  const otp = generateOTP();              // e.g., 6-digit string
+  // User-friendly behavior (as you wanted)
+  if (!user) {
+    // Same shape everywhere: { error: "..." } is easier for frontend
+    throw new HttpError(404, "This email is not registered");
+  }
+
+  const otp = generateOTP();
   const otpHash = await bcrypt.hash(otp, 10);
 
   user.resetOTP = otpHash;
   user.resetOTPExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
   await user.save();
 
-  // ✅ send real email via Nodemailer (Mailtrap in dev)
+  try {
+    await sendOTPEmail({ to: normalizedEmail, otp, minutes: 10 });
+  } catch (e) {
+    // Rollback so user isn't stuck with a non-delivered OTP
+    user.resetOTP = undefined;
+    user.resetOTPExpires = undefined;
+    await user.save();
+    throw new HttpError(502, "Failed to send OTP email. Please try again.");
+  }
 
-await sendOTPEmail({ to: normalizedEmail, otp, minutes: 10 });
-
-
-  // (dev-only) optionally log to console:
   if (process.env.NODE_ENV !== "production") {
     console.log(`[DEV] OTP for ${normalizedEmail}: ${otp}`);
   }
-}
 
-
-  // return res.json({ message: "If this email exists, an OTP has been sent." });
-  
-if (!user) {
-  throw new HttpError(404, "This email is not registered");
-}
-
-return res.json({ message: "OTP has been sent to your email." });
-
+  return res.json({ message: "OTP has been sent to your email." });
 });
+
+
 
 /**
  * POST /auth/verify-otp

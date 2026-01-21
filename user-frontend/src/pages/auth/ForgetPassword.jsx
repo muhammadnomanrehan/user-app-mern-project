@@ -80,7 +80,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast"; // 👈 add this
+import toast from "react-hot-toast"; 
 import { requestOtp } from "../../redux/thunks/authThunks/AuthThunk";
 
 export default function ForgetPassword() {
