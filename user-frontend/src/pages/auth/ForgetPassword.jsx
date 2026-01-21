@@ -182,6 +182,25 @@ export default function ForgetPassword() {
               ? `Wait ${cooldown}s`
               : "Send OTP"}
           </button>
+          
+<div className="flex items-center justify-between text-sm mt-4">
+  <button
+    type="button"
+    onClick={() => navigate("/login")}
+    className="text-gray-600 hover:text-gray-800 underline"
+  >
+    ← Back to Login
+  </button>
+
+  <button
+    type="button"
+    onClick={() => navigate("/register")}
+    className="text-blue-600 hover:text-blue-800 underline font-medium"
+  >
+    Create new account →
+  </button>
+</div>
+
 
           {/* Inline messages (keep) */}
           {fpMessage && (
