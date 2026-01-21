@@ -37,7 +37,7 @@ const Login = () => {
 
         {/* Heading */}
         <h1 className="text-4xl font-extrabold text-center mb-3 text-gray-900 tracking-tight">
-          Welcome Back 👋
+          Welcome Back
         </h1>
 
         <p className="text-center text-gray-600 mb-8 text-sm">
