@@ -20,29 +20,12 @@ const registerSchema = Yup.object({
   gender: Yup.mixed().oneOf(["male","female"],"Select gender").required("Gender is required"),
 });
 
-// const getPasswordStrength = (pwd) => {
-//   const rules = [pwd.length >= 8, /[A-Z]/.test(pwd), /[a-z]/.test(pwd), /\d/.test(pwd), /[^A-Za-z0-9]/.test(pwd)];
-//   const passed = rules.filter(Boolean).length;
-//   const score = Math.round((passed / 5) * 100);
-//   let label = "Weak";
-//   if (score >= 80) label = "Strong";
-//   else if (score >= 60) label = "Medium";
-//   return { score, label };
-// };
-
 const Register = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { loading, error } = useSelector((s) => s.auth);
-
-  // const [pwd, setPwd] = useState("");
-  // const { score, label } = getPasswordStrength(pwd);
-  
 const [pwd, setPwd] = useState("");
 const { score, label } = usePasswordStrength(pwd);
-
-
-
   useEffect(() => { dispatch(clearAuthError()); }, [dispatch]);
   useEffect(() => { if (error) toast.error(error); }, [error]);
 
