@@ -385,7 +385,14 @@ await sendOTPEmail({ to: normalizedEmail, otp, minutes: 10 });
 }
 
 
-  return res.json({ message: "If this email exists, an OTP has been sent." });
+  // return res.json({ message: "If this email exists, an OTP has been sent." });
+  
+if (!user) {
+  throw new HttpError(404, "This email is not registered");
+}
+
+return res.json({ message: "OTP has been sent to your email." });
+
 });
 
 /**
