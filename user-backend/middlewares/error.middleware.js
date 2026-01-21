@@ -1,9 +1,7 @@
 
-// middlewares/error.middleware.js
 import { HttpError } from "../utils/httpError.js";
 
 export function errorHandler(err, _req, res, _next) {
-  // Duplicate key (unique email) — even after exists check, race conditions
   if (err?.code === 11000) {
     return res.status(409).json({ message: "Email already exists" });
   }

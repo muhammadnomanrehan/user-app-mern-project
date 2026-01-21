@@ -1,27 +1,4 @@
 
-// // utils/validators.js
-// import { HttpError } from "./httpError.js";
-
-// export function validateRegister({ name, email, password }) {
-//   if (!name || !email || !password) {
-//     throw new HttpError(400, "name, email, password required");
-//   }
-//   if (password.length < 6) {
-//     throw new HttpError(400, "Password must be at least 6 characters");
-//   }
-// }
-
-// export function validateLogin({ email, password }) {
-//   if (!email || !password) {
-//     throw new HttpError(400, "email and password required");
-//   }
-// }
-
-
-
-
-
-// utils/validators.js
 export function validateRegister(payload = {}) {
   const { firstName, lastName, age, email, password, confirmPassword, gender, role } = payload;
 

@@ -1,5 +1,4 @@
 
-// utils/cookies.js
 const isProd = process.env.NODE_ENV === "production";
 
 export const COOKIE_NAME = process.env.COOKIE_NAME || "auth_token";

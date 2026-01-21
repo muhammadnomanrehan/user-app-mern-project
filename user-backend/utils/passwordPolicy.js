@@ -1,5 +1,4 @@
 
-// utils/passwordPolicy.js
 export function validatePasswordPolicy(pwd) {
   const errors = [];
   if (typeof pwd !== "string" || pwd.length < 8) errors.push("Password must be at least 8 characters");

@@ -1,5 +1,4 @@
 
-// utils/jwt.js
 import jwt from "jsonwebtoken";
 import { HttpError } from "./httpError.js";
 

@@ -1,5 +1,4 @@
 
-// src/hooks/usePasswordStrength.js
 import { useEffect, useState } from "react";
 
 export function usePasswordStrength(password = "") {
