@@ -1,9 +1,8 @@
-// models/user.model.js
+
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    // 🔹 Identity fields
     firstName: {
       type: String,
       required: true,
@@ -23,8 +22,6 @@ const userSchema = new mongoose.Schema(
       min: 0,
       max: 120,
     },
-
-    // 🔹 Contact/Login
     email: {
       type: String,
       required: true,
@@ -33,11 +30,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
-
-    // NOTE: confirmPassword store NAHI karna DB me
     passwordHash: { type: String, required: true },
-
-    // 🔹 Gender
     gender: {
       type: String,
       enum: ["male", "female"],
@@ -72,18 +65,6 @@ roleDocument: { type: String, enum: ["user", "admin"], default: "user" },
     toObject: { virtuals: true },
   }
 );
-
-// /**
-//  * 🔁 Backward compatibility:
-//  * Aapke purane code me `name` used tha. Ab hum name ko virtual bana rahe hain
-//  * taake `user.name` still kaam kare (first + last se banega).
-//  */
-// userSchema.virtual("name").get(function () {
-//   const fn = this.firstName ? this.firstName.trim() : "";
-//   const ln = this.lastName ? this.lastName.trim() : "";
-//   return `${fn} ${ln}`.trim();
-// });
-
 // Unique index (already enforced by schema, but explicit is good)
 userSchema.index({ email: 1 }, { unique: true });
 
