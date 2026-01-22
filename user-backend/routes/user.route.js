@@ -1,5 +1,3 @@
-
-// routes/user.route.js
 import { Router } from "express";
 import {
   login,
@@ -16,8 +14,8 @@ router.post("/register", register);
 router.post("/login", login);
 router.post("/logout", logout);
 
-router.post("/forget-password", forgetPassword); // or /forgot-password (choose one)
-router.post("/verify-otp", verifyOtp);           // <-- removed trailing space
+router.post("/forget-password", forgetPassword); 
+router.post("/verify-otp", verifyOtp);           
 router.post("/reset-password", resetPassword);
 
 export default router;
