@@ -1,4 +1,3 @@
-
 export function validateRegister(payload = {}) {
   const { firstName, lastName, age, email, password, confirmPassword, gender, role } = payload;
 

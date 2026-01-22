@@ -1,6 +1,4 @@
-
 import nodemailer from "nodemailer";
-
 const {
   SMTP_HOST = "sandbox.smtp.mailtrap.io",
   SMTP_PORT = "587",
@@ -11,7 +9,7 @@ const {
 } = process.env;
 
 const PORT = Number(SMTP_PORT);
-const SECURE = PORT === 465; // 465 => implicit TLS
+const SECURE = PORT === 465; 
 
 export const mailer = nodemailer.createTransport({
   host: SMTP_HOST,
@@ -26,9 +24,6 @@ export const mailer = nodemailer.createTransport({
   socketTimeout: 20_000,
   logger: NODE_ENV !== "production",
   debug: NODE_ENV !== "production",
-  // ❌ Mailtrap ke saath TLS hacks ki zaroorat nahi:
-  // tls: { rejectUnauthorized: false },
-  // tls: { servername: "smtp.gmail.com" },
 });
 
 export const sendMail = async ({ to, subject, html, text }) => {
