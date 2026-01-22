@@ -2,7 +2,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import userRouter from "./routes/user.route.js"; // ← correct path & extension
+import userRouter from "./routes/user.route.js"; 
 import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
