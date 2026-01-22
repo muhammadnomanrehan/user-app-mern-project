@@ -110,7 +110,7 @@ const Register = () => {
                   <Field
                     name="firstName"
                     className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
-                    placeholder="Muhammad"
+                    // placeholder="Muhammad"
                   />
                   <ErrorMessage name="firstName" className="mt-1 text-sm text-red-600" component="div" />
                 </div>
@@ -123,7 +123,7 @@ const Register = () => {
                   <Field
                     name="lastName"
                     className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
-                    placeholder="Rehan"
+                    // placeholder="Rehan"
                   />
                   <ErrorMessage name="lastName" className="mt-1 text-sm text-red-600" component="div" />
                 </div>
@@ -131,13 +131,13 @@ const Register = () => {
                 {/* Age */}
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-700">
-                    Age (optional)
+                    Age 
                   </label>
                   <Field
                     name="age"
-                    type="number"
+                    // type="number"
                     className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
-                    placeholder="22"
+                    // placeholder="22"
                   />
                   <ErrorMessage name="age" className="mt-1 text-sm text-red-600" component="div" />
                 </div>
@@ -183,7 +183,7 @@ const Register = () => {
                       <input
                         {...field}
                         type="password"
-                        placeholder="••••••••"
+                        // placeholder="••••••••"
                         onChange={(e) => {
                           field.onChange(e);
                           setPwd(e.target.value);
@@ -228,7 +228,7 @@ const Register = () => {
                   <Field
                     name="confirmPassword"
                     type="password"
-                    placeholder="Re-enter password"
+                    // placeholder="Re-enter password"
                     className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
                   />
                   <ErrorMessage
