@@ -9,17 +9,7 @@ import { createToken } from "../utils/jwt.js";
 import { COOKIE_NAME, cookieOptions } from "../utils/cookies.js";
 import { sendOTPEmail } from "../utils/mailer.js";
 import { validatePasswordPolicy } from "../utils/passwordPolicy.js";
-
-
-
-// 6-digit OTP generator
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
-
-
-/* -----------------------------
-   AUTH: Register / Login / Logout
------------------------------- */
-
 export const register = asyncHandler(async (req, res) => {
   const {
     firstName,
@@ -134,53 +124,6 @@ export const logout = asyncHandler(async (_req, res) => {
 });
 
 
-
-/**
- * POST /auth/forget-password
- * Body: { email }
- * Always respond generic to prevent email enumeration.
- */
-// export const forgetPassword = asyncHandler(async (req, res) => {
-//   const { email } = req.body || {};
-//   if (!email) throw new HttpError(400, "Email is required");
-
-//   const normalizedEmail = String(email).toLowerCase().trim();
-//   const user = await User.findOne({ email: normalizedEmail });
-
-//   // Always return generic success (even if user doesn't exist)
-//   // But if user exists, create and email OTP
-  
-// if (user) {
-//   const otp = generateOTP();              // e.g., 6-digit string
-//   const otpHash = await bcrypt.hash(otp, 10);
-
-//   user.resetOTP = otpHash;
-//   user.resetOTPExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
-//   await user.save();
-
-//   // ✅ send real email via Nodemailer (Mailtrap in dev)
-
-// await sendOTPEmail({ to: normalizedEmail, otp, minutes: 10 });
-
-
-//   // (dev-only) optionally log to console:
-//   if (process.env.NODE_ENV !== "production") {
-//     console.log(`[DEV] OTP for ${normalizedEmail}: ${otp}`);
-//   }
-// }
-
-
-//   // return res.json({ message: "If this email exists, an OTP has been sent." });
-  
-// if (!user) {
-//   throw new HttpError(404, "This email is not registered");
-// }
-
-// return res.json({ message: "OTP has been sent to your email." });
-
-// });
-
-
 export const forgetPassword = asyncHandler(async (req, res) => {
   const { email } = req.body || {};
   if (!email) throw new HttpError(400, "Email is required");
@@ -219,11 +162,7 @@ export const forgetPassword = asyncHandler(async (req, res) => {
 
 
 
-/**
- * POST /auth/verify-otp
- * Body: { email, otp }
- * If valid -> return a short-lived resetToken (JWT) that the client will use to reset password.
- */
+
 export const verifyOtp = asyncHandler(async (req, res) => {
   const { email, otp } = req.body || {};
   if (!email || !otp) throw new HttpError(400, "Email and OTP are required");
@@ -262,18 +201,11 @@ export const verifyOtp = asyncHandler(async (req, res) => {
   return res.json({ message: "OTP verified", resetToken });
 });
 
-/**
- * POST /auth/reset-password
- * Body: { resetToken, newPassword, confirmPassword }
- * Verifies resetToken, updates password, clears any residual reset fields.
- */
+
 export const resetPassword = asyncHandler(async (req, res) => {
   const { resetToken, newPassword, confirmPassword } = req.body || {};
   if (!resetToken) throw new HttpError(400, "Reset token is required");
   if (!newPassword || !confirmPassword) throw new HttpError(400, "New password and confirm password are required");
-  // if (String(newPassword).length < 6) throw new HttpError(400, "Password must be at least 6 characters");
-  
-  
   const policyErrors = validatePasswordPolicy(newPassword);
   if (policyErrors.length) {
     throw new HttpError(400, policyErrors[0]);

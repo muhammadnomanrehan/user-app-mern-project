@@ -65,7 +65,7 @@ const Login = () => {
 
             if (loginUser.fulfilled.match(res)) {
               // Success toast
-              toast.success("Logged in successfully! 🎉");
+              toast.success("Logged in successfully!");
 
               resetForm();
 

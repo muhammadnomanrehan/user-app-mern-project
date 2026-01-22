@@ -6,7 +6,7 @@ const Home = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col items-center justify-center px-4">
       <div className="bg-white shadow-xl rounded-2xl p-10 max-w-lg w-full text-center border border-gray-200">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
-          Welcome Home 🏠
+          Welcome Home 
         </h1>
         <p className="text-gray-600 text-lg mb-6">
           This is your home page. You can customize it as you like!
