@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,19 +10,28 @@ import { clearAuthError } from "../../redux/slices/authSlices/AuthSlice";
 import { usePasswordStrength } from "../../hooks/usePasswordStrength";
 
 const registerSchema = Yup.object({
-  firstName: Yup.string().trim().min(2).max(50).required(),
-  lastName: Yup.string().trim().min(2).max(50).required(),
-  age: Yup.number().nullable(),
-  email: Yup.string()
-    .trim()
-    .email("Invalid email")
-    .required("Email is required"),
-  password: Yup.string().min(8).required("Password is required"),
+  firstName: Yup.string().trim().min(2, "At least 2 characters").max(50, "Max 50").required("First name is required"),
+  lastName: Yup.string().trim().min(2, "At least 2 characters").max(50, "Max 50").required("Last name is required"),
+  age: Yup.number()
+    .typeError("Age must be a number")
+    .integer("Age must be an integer")
+    .positive("Age must be positive")
+    .min(1, "Minimum age is 1")
+    .max(120, "Maximum age is 120")
+    .nullable(),
+  email: Yup.string().trim().email("Invalid email").required("Email is required"),
+  password: Yup.string().min(8, "Minimum 8 characters").required("Password is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords do not match")
-    .required(),
-  gender: Yup.mixed().oneOf(["male", "female"]).required(),
+    .required("Confirm your password"),
+  gender: Yup.mixed().oneOf(["male", "female"], "Select a valid gender").required("Gender is required"),
 });
+
+// Compact input styles
+const inputBase =
+  "w-full border rounded-lg px-3 py-2.5 shadow-sm bg-white focus:outline-none focus:ring-2 transition text-[15px]";
+const inputNormal = `${inputBase} border-gray-300 focus:ring-blue-500`;
+const inputError = `${inputBase} border-red-400 focus:ring-red-500`;
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -40,24 +50,21 @@ const Register = () => {
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100 px-4">
-      <div className="w-full max-w-xl bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/40 p-10">
-        {/* Heading */}
-        <h1 className="text-4xl font-extrabold text-center mb-3 text-gray-900 tracking-tight">
+    // ❗️Navbar must have h-16 (4rem). No page scroll.
+    <div className="h-[calc(100dvh-4rem)] overflow-hidden grid place-items-center bg-gradient-to-br from-blue-50 via-white to-blue-100 px-3">
+      <div className="w-full max-w-xl bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl border border-white/60 p-5 text-[15px]">
+        {/* Heading (compact) */}
+        <h1 className="text-3xl font-extrabold text-center mb-1 text-gray-900 tracking-tight leading-tight">
           Create Account
         </h1>
-        <p className="text-center text-gray-600 mb-8 text-sm">
-          Join <span className="font-bold text-blue-600">MyApp</span> today
+        <p className="text-center text-gray-600 mb-5 text-[13px] leading-snug">
+          Join <span className="font-semibold text-blue-600">MyApp</span> today
         </p>
 
-        {/* Hidden fake fields */}
+        {/* Hidden fake fields (autocomplete hardening) */}
         <form className="hidden" autoComplete="off">
           <input type="text" name="fake-username" autoComplete="username" />
-          <input
-            type="password"
-            name="fake-password"
-            autoComplete="new-password"
-          />
+          <input type="password" name="fake-password" autoComplete="new-password" />
         </form>
 
         <Formik
@@ -73,10 +80,15 @@ const Register = () => {
           }}
           validationSchema={registerSchema}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
+            const age =
+              typeof values.age === "string" && /^\d+$/.test(values.age)
+                ? Number(values.age)
+                : undefined;
+
             const payload = {
               firstName: values.firstName.trim(),
               lastName: values.lastName.trim(),
-              age: values.age === "" ? undefined : Number(values.age),
+              age,
               email: values.email.trim().toLowerCase(),
               password: values.password,
               confirmPassword: values.confirmPassword,
@@ -91,84 +103,99 @@ const Register = () => {
               toast.success(
                 <span className="text-sm">
                   Registered successfully →{" "}
-                  <Link
-                    to="/login"
-                    className="font-semibold text-blue-700 underline"
-                  >
+                  <Link to="/login" className="font-semibold text-blue-700 underline">
                     Login
                   </Link>
-                </span>,
+                </span>
               );
             } else {
               toast.error(res.payload || "Registration failed");
             }
           }}
         >
-          {({ handleSubmit, isSubmitting }) => (
-            <Form onSubmit={handleSubmit} className="space-y-6">
-              {/* Form grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {({ handleSubmit, isSubmitting, errors, touched }) => (
+            <Form onSubmit={handleSubmit} className="space-y-4">
+              {/* Fields grid (compact gaps) */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {/* First Name */}
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-gray-700">
+                  <label className="block text-[13px] font-semibold mb-1 text-gray-700 leading-none">
                     First Name
                   </label>
-                  <Field
-                    name="firstName"
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
-                    // placeholder="Muhammad"
-                  />
+                  <Field name="firstName">
+                    {({ field }) => (
+                      <input
+                        {...field}
+                        className={touched.firstName && errors.firstName ? inputError : inputNormal}
+                        // placeholder="Muhammad"
+                      />
+                    )}
+                  </Field>
                   <ErrorMessage
                     name="firstName"
-                    className="mt-1 text-sm text-red-600"
+                    className="mt-0.5 text-xs text-red-600 leading-none line-clamp-1"
                     component="div"
                   />
                 </div>
 
                 {/* Last Name */}
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-gray-700">
+                  <label className="block text-[13px] font-semibold mb-1 text-gray-700 leading-none">
                     Last Name
                   </label>
-                  <Field
-                    name="lastName"
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
-                    // placeholder="Rehan"
-                  />
+                  <Field name="lastName">
+                    {({ field }) => (
+                      <input
+                        {...field}
+                        className={touched.lastName && errors.lastName ? inputError : inputNormal}
+                        // placeholder="Rehan"
+                      />
+                    )}
+                  </Field>
                   <ErrorMessage
                     name="lastName"
-                    className="mt-1 text-sm text-red-600"
+                    className="mt-0.5 text-xs text-red-600 leading-none line-clamp-1"
                     component="div"
                   />
                 </div>
 
-                {/* Age */}
+                {/* Age (digits-only) */}
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-gray-700">
+                  <label className="block text-[13px] font-semibold mb-1 text-gray-700 leading-none">
                     Age
                   </label>
-                  <Field
-                    name="age"
-                    // type="number"
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
-                    // placeholder="22"
-                  />
+                  <Field name="age">
+                    {({ field, form }) => (
+                      <input
+                        {...field}
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        onChange={(e) => {
+                          const onlyDigits = e.target.value.replace(/\D/g, "");
+                          form.setFieldValue("age", onlyDigits);
+                        }}
+                        className={touched.age && errors.age ? inputError : inputNormal}
+                        placeholder="22"
+                      />
+                    )}
+                  </Field>
                   <ErrorMessage
                     name="age"
-                    className="mt-1 text-sm text-red-600"
+                    className="mt-0.5 text-xs text-red-600 leading-none line-clamp-1"
                     component="div"
                   />
                 </div>
 
                 {/* Gender */}
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-gray-700">
+                  <label className="block text-[13px] font-semibold mb-1 text-gray-700 leading-none">
                     Gender
                   </label>
                   <Field
                     as="select"
                     name="gender"
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
+                    className={touched.gender && errors.gender ? inputError : inputNormal}
                   >
                     <option value="">Select gender</option>
                     <option value="male">Male</option>
@@ -176,32 +203,36 @@ const Register = () => {
                   </Field>
                   <ErrorMessage
                     name="gender"
-                    className="mt-1 text-sm text-red-600"
+                    className="mt-0.5 text-xs text-red-600 leading-none line-clamp-1"
                     component="div"
                   />
                 </div>
 
-                {/* Email */}
+                {/* Email (full width) */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold mb-1 text-gray-700">
+                  <label className="block text-[13px] font-semibold mb-1 text-gray-700 leading-none">
                     Email Address
                   </label>
-                  <Field
-                    name="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
-                  />
+                  <Field name="email">
+                    {({ field }) => (
+                      <input
+                        {...field}
+                        type="email"
+                        className={touched.email && errors.email ? inputError : inputNormal}
+                        placeholder="you@example.com"
+                      />
+                    )}
+                  </Field>
                   <ErrorMessage
                     name="email"
-                    className="mt-1 text-sm text-red-600"
+                    className="mt-0.5 text-xs text-red-600 leading-none line-clamp-1"
                     component="div"
                   />
                 </div>
 
                 {/* Password */}
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-gray-700">
+                  <label className="block text-[13px] font-semibold mb-1 text-gray-700 leading-none">
                     Password
                   </label>
                   <Field name="password">
@@ -209,45 +240,31 @@ const Register = () => {
                       <input
                         {...field}
                         type="password"
-                        // placeholder="••••••••"
                         onChange={(e) => {
                           field.onChange(e);
                           setPwd(e.target.value);
                         }}
-                        className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
+                        className={touched.password && errors.password ? inputError : inputNormal}
+                        placeholder="••••••••"
                       />
                     )}
                   </Field>
 
-                  {/* Strength bar */}
-
-                  {/* Strength bar -- SHOW ONLY WHEN USER TYPED SOMETHING */}
+                  {/* Strength bar (compact) */}
                   {pwd.length > 0 && (
                     <div className="mt-1" aria-live="polite">
-                      <div className="h-1.5 bg-gray-200 rounded">
+                      <div className="h-1 bg-gray-200 rounded">
                         <div
-                          className="h-1.5 rounded transition-all"
+                          className="h-1 rounded transition-all"
                           style={{
                             width: `${score}%`,
-                            background:
-                              score >= 80
-                                ? "#16a34a"
-                                : score >= 60
-                                  ? "#f59e0b"
-                                  : "#ef4444",
+                            background: score >= 80 ? "#16a34a" : score >= 60 ? "#f59e0b" : "#ef4444",
                           }}
                         />
                       </div>
                       <small
                         className="text-[10px] font-medium"
-                        style={{
-                          color:
-                            score >= 80
-                              ? "#16a34a"
-                              : score >= 60
-                                ? "#f59e0b"
-                                : "#ef4444",
-                        }}
+                        style={{ color: score >= 80 ? "#16a34a" : score >= 60 ? "#f59e0b" : "#ef4444" }}
                       >
                         {label}
                       </small>
@@ -256,53 +273,51 @@ const Register = () => {
 
                   <ErrorMessage
                     name="password"
-                    className="mt-1 text-sm text-red-600"
+                    className="mt-0.5 text-xs text-red-600 leading-none line-clamp-1"
                     component="div"
                   />
                 </div>
 
                 {/* Confirm Password */}
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-gray-700">
+                  <label className="block text-[13px] font-semibold mb-1 text-gray-700 leading-none">
                     Confirm Password
                   </label>
                   <Field
                     name="confirmPassword"
                     type="password"
+                    className={touched.confirmPassword && errors.confirmPassword ? inputError : inputNormal}
                     // placeholder="Re-enter password"
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
                   />
                   <ErrorMessage
                     name="confirmPassword"
-                    className="mt-1 text-sm text-red-600"
+                    className="mt-0.5 text-xs text-red-600 leading-none line-clamp-1"
                     component="div"
                   />
                 </div>
               </div>
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={loading || isSubmitting}
-                className={`w-full rounded-xl py-3 font-semibold text-white transition-all duration-200 shadow-md ${
-                  loading || isSubmitting
-                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg"
-                }`}
-              >
-                {loading || isSubmitting ? "Creating..." : "Create Account"}
-              </button>
-
-              {/* Login Link */}
-              <p className="text-center text-sm text-gray-600">
-                Already have an account?{" "}
-                <Link
-                  to="/login"
-                  className="font-semibold text-blue-600 hover:underline"
+              {/* Actions (compact) */}
+              <div className="pt-1">
+                <button
+                  type="submit"
+                  disabled={loading || isSubmitting}
+                  className={`w-full rounded-lg py-2.5 font-semibold text-white transition-all duration-200 shadow-md ${
+                    loading || isSubmitting
+                      ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                      : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg active:scale-[0.99]"
+                  }`}
                 >
-                  Login
-                </Link>
-              </p>
+                  {loading || isSubmitting ? "Creating..." : "Create Account"}
+                </button>
+
+                <p className="mt-1.5 text-center text-[13px] text-gray-600">
+                  Already have an account?{" "}
+                  <Link to="/login" className="font-semibold text-blue-600 hover:underline">
+                    Login
+                  </Link>
+                </p>
+              </div>
             </Form>
           )}
         </Formik>
@@ -312,6 +327,10 @@ const Register = () => {
 };
 
 export default Register;
+
+
+
+
 
 // import React, { useEffect, useState } from "react";
 // import { Link, useLocation, useNavigate } from "react-router-dom";
