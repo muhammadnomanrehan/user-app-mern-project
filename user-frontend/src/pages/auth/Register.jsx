@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +12,10 @@ const registerSchema = Yup.object({
   firstName: Yup.string().trim().min(2).max(50).required(),
   lastName: Yup.string().trim().min(2).max(50).required(),
   age: Yup.number().nullable(),
-  email: Yup.string().trim().email("Invalid email").required("Email is required"),
+  email: Yup.string()
+    .trim()
+    .email("Invalid email")
+    .required("Email is required"),
   password: Yup.string().min(8).required("Password is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords do not match")
@@ -40,7 +42,6 @@ const Register = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100 px-4">
       <div className="w-full max-w-xl bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/40 p-10">
-
         {/* Heading */}
         <h1 className="text-4xl font-extrabold text-center mb-3 text-gray-900 tracking-tight">
           Create Account
@@ -52,7 +53,11 @@ const Register = () => {
         {/* Hidden fake fields */}
         <form className="hidden" autoComplete="off">
           <input type="text" name="fake-username" autoComplete="username" />
-          <input type="password" name="fake-password" autoComplete="new-password" />
+          <input
+            type="password"
+            name="fake-password"
+            autoComplete="new-password"
+          />
         </form>
 
         <Formik
@@ -86,10 +91,13 @@ const Register = () => {
               toast.success(
                 <span className="text-sm">
                   Registered successfully →{" "}
-                  <Link to="/login" className="font-semibold text-blue-700 underline">
+                  <Link
+                    to="/login"
+                    className="font-semibold text-blue-700 underline"
+                  >
                     Login
                   </Link>
-                </span>
+                </span>,
               );
             } else {
               toast.error(res.payload || "Registration failed");
@@ -98,10 +106,8 @@ const Register = () => {
         >
           {({ handleSubmit, isSubmitting }) => (
             <Form onSubmit={handleSubmit} className="space-y-6">
-
               {/* Form grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
                 {/* First Name */}
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-700">
@@ -112,7 +118,11 @@ const Register = () => {
                     className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
                     // placeholder="Muhammad"
                   />
-                  <ErrorMessage name="firstName" className="mt-1 text-sm text-red-600" component="div" />
+                  <ErrorMessage
+                    name="firstName"
+                    className="mt-1 text-sm text-red-600"
+                    component="div"
+                  />
                 </div>
 
                 {/* Last Name */}
@@ -125,13 +135,17 @@ const Register = () => {
                     className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
                     // placeholder="Rehan"
                   />
-                  <ErrorMessage name="lastName" className="mt-1 text-sm text-red-600" component="div" />
+                  <ErrorMessage
+                    name="lastName"
+                    className="mt-1 text-sm text-red-600"
+                    component="div"
+                  />
                 </div>
 
                 {/* Age */}
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-700">
-                    Age 
+                    Age
                   </label>
                   <Field
                     name="age"
@@ -139,7 +153,11 @@ const Register = () => {
                     className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
                     // placeholder="22"
                   />
-                  <ErrorMessage name="age" className="mt-1 text-sm text-red-600" component="div" />
+                  <ErrorMessage
+                    name="age"
+                    className="mt-1 text-sm text-red-600"
+                    component="div"
+                  />
                 </div>
 
                 {/* Gender */}
@@ -156,7 +174,11 @@ const Register = () => {
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                   </Field>
-                  <ErrorMessage name="gender" className="mt-1 text-sm text-red-600" component="div" />
+                  <ErrorMessage
+                    name="gender"
+                    className="mt-1 text-sm text-red-600"
+                    component="div"
+                  />
                 </div>
 
                 {/* Email */}
@@ -170,7 +192,11 @@ const Register = () => {
                     placeholder="you@example.com"
                     className="w-full border border-gray-300 rounded-xl px-4 py-3 shadow-sm bg-white focus:ring-2 focus:ring-blue-500"
                   />
-                  <ErrorMessage name="email" className="mt-1 text-sm text-red-600" component="div" />
+                  <ErrorMessage
+                    name="email"
+                    className="mt-1 text-sm text-red-600"
+                    component="div"
+                  />
                 </div>
 
                 {/* Password */}
@@ -194,30 +220,45 @@ const Register = () => {
                   </Field>
 
                   {/* Strength bar */}
-                
-{/* Strength bar -- SHOW ONLY WHEN USER TYPED SOMETHING */}
-{pwd.length > 0 && (
-  <div className="mt-1" aria-live="polite">
-    <div className="h-1.5 bg-gray-200 rounded">
-      <div
-        className="h-1.5 rounded transition-all"
-        style={{
-          width: `${score}%`,
-          background: score >= 80 ? "#16a34a" : score >= 60 ? "#f59e0b" : "#ef4444",
-        }}
-      />
-    </div>
-    <small
-      className="text-[10px] font-medium"
-      style={{ color: score >= 80 ? "#16a34a" : score >= 60 ? "#f59e0b" : "#ef4444" }}
-    >
-      {label}
-    </small>
-  </div>
-)}
 
+                  {/* Strength bar -- SHOW ONLY WHEN USER TYPED SOMETHING */}
+                  {pwd.length > 0 && (
+                    <div className="mt-1" aria-live="polite">
+                      <div className="h-1.5 bg-gray-200 rounded">
+                        <div
+                          className="h-1.5 rounded transition-all"
+                          style={{
+                            width: `${score}%`,
+                            background:
+                              score >= 80
+                                ? "#16a34a"
+                                : score >= 60
+                                  ? "#f59e0b"
+                                  : "#ef4444",
+                          }}
+                        />
+                      </div>
+                      <small
+                        className="text-[10px] font-medium"
+                        style={{
+                          color:
+                            score >= 80
+                              ? "#16a34a"
+                              : score >= 60
+                                ? "#f59e0b"
+                                : "#ef4444",
+                        }}
+                      >
+                        {label}
+                      </small>
+                    </div>
+                  )}
 
-                  <ErrorMessage name="password" className="mt-1 text-sm text-red-600" component="div" />
+                  <ErrorMessage
+                    name="password"
+                    className="mt-1 text-sm text-red-600"
+                    component="div"
+                  />
                 </div>
 
                 {/* Confirm Password */}
@@ -255,33 +296,22 @@ const Register = () => {
               {/* Login Link */}
               <p className="text-center text-sm text-gray-600">
                 Already have an account?{" "}
-                <Link to="/login" className="font-semibold text-blue-600 hover:underline">
+                <Link
+                  to="/login"
+                  className="font-semibold text-blue-600 hover:underline"
+                >
                   Login
                 </Link>
               </p>
             </Form>
           )}
         </Formik>
-
       </div>
     </div>
   );
 };
 
 export default Register;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useEffect, useState } from "react";
 // import { Link, useLocation, useNavigate } from "react-router-dom";
