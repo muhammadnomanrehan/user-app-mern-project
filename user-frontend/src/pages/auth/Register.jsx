@@ -176,7 +176,7 @@ const Register = () => {
                           form.setFieldValue("age", onlyDigits);
                         }}
                         className={touched.age && errors.age ? inputError : inputNormal}
-                        placeholder="22"
+                        // placeholder="22"
                       />
                     )}
                   </Field>
