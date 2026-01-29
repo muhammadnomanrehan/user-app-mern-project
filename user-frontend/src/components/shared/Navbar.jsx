@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -12,8 +11,7 @@ const Navbar = () => {
 
   const [open, setOpen] = useState(false);
 
-
-const handleLogout = async () => {
+  const handleLogout = async () => {
     try {
       const res = await dispatch(logoutUser());
       if (logoutUser.fulfilled.match(res)) {
@@ -30,13 +28,9 @@ const handleLogout = async () => {
     }
   };
 
-
-  
-  const baseLink =
-    "text-sm font-medium px-3 py-2 rounded-lg transition-all duration-200";
+  const baseLink = "text-sm font-medium px-3 py-2 rounded-lg transition-all duration-200";
   const activeLink = "bg-blue-600 text-white shadow-md hover:bg-blue-700";
-  const inactiveLink =
-    "text-gray-700 hover:text-blue-700 hover:bg-blue-50";
+  const inactiveLink = "text-gray-700 hover:text-blue-700 hover:bg-blue-50";
 
   return (
     <nav className="sticky top-0 z-30 w-full border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm">
@@ -81,6 +75,9 @@ const handleLogout = async () => {
               >
                 Contact Us
               </NavLink>
+              <NavLink to="/inventory" className="...">
+                Inventory
+              </NavLink>
             </div>
           </div>
 
@@ -89,9 +86,7 @@ const handleLogout = async () => {
             {isAuthenticated && user?.name ? (
               <span className="text-sm text-gray-600">
                 Hi,{" "}
-                <span className="font-semibold text-gray-900">
-                  {user.name}
-                </span>
+                <span className="font-semibold text-gray-900">{user.name}</span>
               </span>
             ) : null}
 
@@ -100,9 +95,7 @@ const handleLogout = async () => {
                 <NavLink
                   to="/register"
                   className={({ isActive }) =>
-                    `${baseLink} ${
-                      isActive ? activeLink : inactiveLink
-                    }`
+                    `${baseLink} ${isActive ? activeLink : inactiveLink}`
                   }
                 >
                   Register
@@ -110,9 +103,7 @@ const handleLogout = async () => {
                 <NavLink
                   to="/login"
                   className={({ isActive }) =>
-                    `${baseLink} ${
-                      isActive ? activeLink : inactiveLink
-                    }`
+                    `${baseLink} ${isActive ? activeLink : inactiveLink}`
                   }
                 >
                   Login
@@ -177,9 +168,7 @@ const handleLogout = async () => {
             <NavLink
               to="/home"
               className={({ isActive }) =>
-                `block ${baseLink} ${
-                  isActive ? activeLink : inactiveLink
-                }`
+                `block ${baseLink} ${isActive ? activeLink : inactiveLink}`
               }
               onClick={() => setOpen(false)}
             >
@@ -188,9 +177,7 @@ const handleLogout = async () => {
             <NavLink
               to="/about"
               className={({ isActive }) =>
-                `block ${baseLink} ${
-                  isActive ? activeLink : inactiveLink
-                }`
+                `block ${baseLink} ${isActive ? activeLink : inactiveLink}`
               }
               onClick={() => setOpen(false)}
             >
@@ -199,9 +186,7 @@ const handleLogout = async () => {
             <NavLink
               to="/contact"
               className={({ isActive }) =>
-                `block ${baseLink} ${
-                  isActive ? activeLink : inactiveLink
-                }`
+                `block ${baseLink} ${isActive ? activeLink : inactiveLink}`
               }
               onClick={() => setOpen(false)}
             >
