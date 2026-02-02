@@ -39,7 +39,7 @@ export const register = asyncHandler(async (req, res) => {
     if (!email) throw new HttpError(400, "Email is required");
     // if (!password || password.length < 6) throw new HttpError(400, "Password must be at least 6 characters");
     
-// ✅ enforce full password policy
+// enforce full password policy
     if (!password) throw new HttpError(400, "Password is required");
     const policyErrors = validatePasswordPolicy(password);
     if (policyErrors.length) {

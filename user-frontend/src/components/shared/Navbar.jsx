@@ -28,7 +28,8 @@ const Navbar = () => {
     }
   };
 
-  const baseLink = "text-sm font-medium px-3 py-2 rounded-lg transition-all duration-200";
+  const baseLink =
+    "text-sm font-medium px-3 py-2 rounded-lg transition-all duration-200";
   const activeLink = "bg-blue-600 text-white shadow-md hover:bg-blue-700";
   const inactiveLink = "text-gray-700 hover:text-blue-700 hover:bg-blue-50";
 
@@ -78,6 +79,17 @@ const Navbar = () => {
               <NavLink to="/inventory" className="...">
                 Inventory
               </NavLink>
+
+              {/* ✅ Add Inventory */}
+              <NavLink
+                to="/inventory/add"
+                className={({ isActive }) =>
+                  `${baseLink} ${isActive ? activeLink : inactiveLink}`
+                }
+                onClick={() => setOpen(false)}
+              >
+                Add Inventory
+              </NavLink>
             </div>
           </div>
 
@@ -114,12 +126,28 @@ const Navbar = () => {
                 type="button"
                 onClick={handleLogout}
                 disabled={loading}
-                className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
-                  loading
-                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-gradient-to-r from-gray-900 to-black text-white hover:opacity-90 shadow-sm"
-                }`}
+                className={`ml-3 flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-all
+    ${
+      loading
+        ? "text-gray-400 cursor-not-allowed"
+        : "text-red-600 hover:bg-red-50 hover:text-red-700"
+    }`}
               >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7"
+                  />
+                </svg>
+
                 {loading ? "Logging out..." : "Logout"}
               </button>
             )}

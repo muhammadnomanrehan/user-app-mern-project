@@ -41,10 +41,6 @@
 
 // export default AppRoutes;
 
-
-
-
-
 import React, { Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "../components/shared/Navbar";
@@ -65,39 +61,44 @@ import Contact from "../pages/contact/ContactUs";
 import InventoryList from "../features/inventory/pages/InventoryList";
 import PurchaseInvoice from "../features/inventory/pages/PurchaseInvoice";
 import InventoryLayout from "../features/inventory/InventoryLAyout";
+import AddInventory from "../features/inventory/pages/AddInventory";
+import InventoryView from "../features/inventory/pages/InventoryView";
 
 const AppRoutes = () => {
   return (
     <>
       <Navbar />
-        <Routes>
-          {/* Public */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgetPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/verify-otp" element={<VerifyOtp />} />
-            <Route path="/about" element={<About />} />
+      <Routes>
+        {/* Public */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgetPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
 
-          {/* Protected area */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/home" element={<Home />} />
+        {/* Protected area */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/home" element={<Home />} />
 
-            {/* Inventory (nested). If role limit needed, wrap with RoleRoute */}
-            {/* <Route element={<RoleRoute allowed={['master','admin']} />}> */}
-              <Route path="/inventory" element={<InventoryLayout />}>
-                <Route index element={<Navigate to="list" replace />} />
-                <Route path="list" element={<InventoryList />} />
-                <Route path="purchase-invoice" element={<PurchaseInvoice />} />
-              </Route>
-            {/* </Route> */}
+          {/* Inventory (nested). If role limit needed, wrap with RoleRoute */}
+          {/* <Route element={<RoleRoute allowed={['master','admin']} />}> */}
+          <Route path="/inventory" element={<InventoryLayout />}>
+            <Route index element={<Navigate to="list" replace />} />
+            <Route path="list" element={<InventoryList />} />
+            <Route path="add" element={<AddInventory />} />
+             <Route path="edit/:id" element={<AddInventory />} />
+            <Route path="/inventory/view/:id" element={<InventoryView />} />
+            <Route path="purchase-invoice" element={<PurchaseInvoice />} />
           </Route>
+          {/* </Route> */}
+        </Route>
 
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
     </>
   );
 };
